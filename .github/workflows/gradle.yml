@@ -37,6 +37,6 @@ jobs:
       with:
          image: laeeqa222/myrepo
          registry: docker.io
-         username: ${{ secrets.DOCKER_USERNAME }}
+         username: ${{  secrets.DOCKER_USERNAME }}
          password: ${{ secrets.DOCKER_PASSWORD }}
             
