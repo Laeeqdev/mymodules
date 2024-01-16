@@ -15,10 +15,25 @@ on:
 
 permissions:
   contents: read
-
+inputs:
+  docker-user: laeeqa222
+    description: "Docker user to use when uploading container"
+    required: true
+  image-name: laeeqa222/myrepo
+    description: "Image name"
+    required: true
+  dockerhub-token: Laeeq4012
+    description: "Dockerhub token"
+    required: true
+  docker-registry-url: docker.io
+    description: "URL for the Docker registry"
+    required: false
+    default: "docker.io"
+  version: latest
+    description: "App version"
+    required: true  
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -35,8 +50,12 @@ jobs:
     - name: Build and Push Docker Image 
       uses: docker/login-action@v3
       with:
-         image: laeeqa222/myrepo
-         registry: docker.io
-         username: laeeqa222
-         password: Laeeq4012
-            
+        registry: ${{ inputs.docker-registry-url }}
+        username: ${{ inputs.docker-user }}
+        password: ${{ inputs.dockerhub-token }}
+    - name: Docker build
+      run: "docker build -t ${{ inputs.docker-registry-url }}/${{ inputs.docker-user }}/${{ inputs.image-name }}:${{ inputs.version }} -t ${{ inputs.docker-registry-url }}/${{ inputs.docker-user }}/${{ inputs.image-name }}:latest ."
+      shell: bash
+    - name: Docker push
+      run: docker push --all-tags ${{ inputs.docker-registry-url }}/${{ inputs.docker-user }}/${{ inputs.image-name }}
+      shell: bash        
